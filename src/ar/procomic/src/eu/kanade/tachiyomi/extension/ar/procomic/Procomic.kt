@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.extension.ar.procomic
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.source.model.*
 import eu.kanade.tachiyomi.source.online.ParsedHttpSource
+import okhttp3.Headers
 import okhttp3.Request
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -13,9 +14,15 @@ class Procomic : ParsedHttpSource() {
     override val lang = "ar"
     override val supportsLatest = true
 
+    // السر هنا: القناع اللي بيخلي التطبيق يظهر كمتصفح كروم حقيقي ويتخطى قفل السيرفر
+    override fun headersBuilder(): Headers.Builder = super.headersBuilder()
+        .add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        .add("Referer", "$baseUrl/")
+        .add("Accept-Language", "ar,en-US;q=0.9,en;q=0.8")
+
     // إعدادات العرض الشعبي
     override fun popularMangaRequest(page: Int): Request = GET("$baseUrl/popular?page=$page", headers)
-    override fun popularMangaSelector() = "div.manga-card, div.post-item" // جلب أكثر من احتمال لشكل التصميم
+    override fun popularMangaSelector() = "div.manga-card, div.post-item"
     override fun popularMangaFromElement(element: Element): SManga = SManga.create().apply {
         setUrlWithoutDomain(element.select("a").attr("href"))
         title = element.select("h3, .title").text()
@@ -29,7 +36,7 @@ class Procomic : ParsedHttpSource() {
     override fun latestUpdatesFromElement(element: Element) = popularMangaFromElement(element)
     override fun latestUpdatesNextPageSelector() = popularMangaNextPageSelector()
 
-    // البحث عن Keyboard Immortal وغيرها
+    // البحث
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
         return GET("$baseUrl/search?q=$query&page=$page", headers)
     }
@@ -60,4 +67,3 @@ class Procomic : ParsedHttpSource() {
 
     override fun imageUrlParse(document: Document) = throw UnsupportedOperationException("Not used")
 }
-
