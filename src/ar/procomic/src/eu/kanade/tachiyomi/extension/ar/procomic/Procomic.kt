@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element
 
 class Procomic : ParsedHttpSource() {
 
-    override val name = "Procomic"
+    override val name = "Procomic Fix"
     override val baseUrl = "https://procomic.net"
     override val lang = "ar"
     override val supportsLatest = true
