@@ -1,0 +1,11 @@
+ext {
+    extName = 'Procomic'
+    pkgNameSuffix = 'ar.procomic'
+    extClass = '.Procomic'
+    extVersionCode = 1
+    isNsfw = false
+    libVersion = '1.4'
+}
+
+apply from: "$rootDir/common.gradle"
+
