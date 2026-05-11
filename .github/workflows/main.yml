@@ -1,6 +1,5 @@
 name: Build Procomic
 on: [push, workflow_dispatch]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,8 +11,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Build Procomic Extension
-        run: chmod +x gradlew && ./gradlew :src:ar:procomic:assembleDebug
+      - name: Fix Format and Build
+        run: |
+          chmod +x gradlew
+          ./gradlew spotlessApply
+          ./gradlew :src:ar:procomic:assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
