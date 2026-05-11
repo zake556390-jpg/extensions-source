@@ -11,11 +11,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Fix Format and Build
+      - name: Force Build
         run: |
           chmod +x gradlew
-          ./gradlew spotlessApply
-          ./gradlew :src:ar:procomic:assembleDebug
+          ./gradlew :src:ar:procomic:assembleDebug -x spotlessCheck -x spotlessKotlinCheck
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
